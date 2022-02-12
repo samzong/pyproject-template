@@ -61,6 +61,11 @@ class User(BaseModel):
 users = []
 
 
+@app.get("/")
+async def homepage():
+    return {"Hello": "World"}
+
+
 @app.get("/users", response_model=List[User], tags=["users"])
 async def get_users():
     return users
