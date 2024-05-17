@@ -11,4 +11,4 @@ E-mail: samzong.lu@gmail.com
 
 
 def hello():
-    return "Hello World"
+    return {"message": "Hello World!"}

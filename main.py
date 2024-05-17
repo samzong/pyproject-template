@@ -11,6 +11,7 @@ E-mail: samzong.lu@gmail.com
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 
 from src.hello import hello
 
@@ -21,11 +22,9 @@ app = FastAPI(
     title="Template Project",
     description="A template project of FastAPI",
     version="1.0",
-    terms_of_service="https://samzong.me",
     contact={
         "name": "Samzong Lu",
         "url": "https://samzong.me",
-        "email": "samzonglu@gmail.com"
     },
     license_info={
         "name": "Apache 2.0",
@@ -35,9 +34,13 @@ app = FastAPI(
 
 
 @app.get("/")
-async def index():
+async def root():
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/hello")
+async def get_hello():
     return hello()
 
-
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="info")
