@@ -9,38 +9,23 @@ E-mail: samzong.lu@gmail.com
 
 """
 
-from fastapi import FastAPI, Path, Query
-from pydantic import BaseModel
-from typing import Optional, List
+import uvicorn
+from fastapi import FastAPI
 
-tags_metadata = [
-    {
-        "name": "users",
-        "description": "Operations with users. The **login** logic is also here.",
-    },
-    {
-        "name": "items",
-        "description": "Manage items. So _fancy_ they have their own docs.",
-        "externalDocs": {
-            "description": "Items external docs",
-            "url": "https://fastapi.tiangolo.com/",
-        },
-    },
-]
+from src.hello import hello
 
 app = FastAPI(
     openapi_url="/api/v1/openapi.json",
-    docs_url="/documentation",
+    docs_url="/docs",
     redoc_url=None,
-    openapi_tags=tags_metadata,
-    title="user example",
-    description="A demo project of user example",
+    title="Template Project",
+    description="A template project of FastAPI",
     version="1.0",
     terms_of_service="https://samzong.me",
     contact={
-        "name": "Alex",
+        "name": "Samzong Lu",
         "url": "https://samzong.me",
-        "email": "samzong.lu@gmail.com"
+        "email": "samzonglu@gmail.com"
     },
     license_info={
         "name": "Apache 2.0",
@@ -49,49 +34,10 @@ app = FastAPI(
 )
 
 
-class User(BaseModel):
-    # user_id: int
-    user_name: str
-    email: str
-    age: int
-    is_active: bool
-    bio: Optional[str]
-
-
-users = []
-
-
 @app.get("/")
-async def homepage():
-    return {"Hello": "World"}
+async def index():
+    return hello()
 
 
-@app.get("/users", response_model=List[User], tags=["users"])
-async def get_users():
-    return users
-
-
-@app.post("/users", tags=["users", "items"])
-async def create_user(user: User):
-    users.append(user)
-    return "Success"
-
-
-@app.get("/users/{id}", tags=["users"],
-         summary="This is summary",
-         response_description="This is a response_description")
-async def get_user(
-        id: int = Path(..., description="The ID of the user you want to get", gt=1),
-        q: str = Query(None, max_length=6)
-):
-    return {"user": users[id], "q": q}
-
-
-@app.delete("/user/{id}", tags=["items"], deprecated=True)
-async def delete_user(id: int = Path(..., description="The ID of the user is you want remove it")):
-    """
-    - This line 1
-    - This line 2
-    """
-    users.pop(id)
-    return "Success"
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

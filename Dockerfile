@@ -1,4 +1,4 @@
-FROM ludotech/python3.9-poetry
+FROM python:3.11-slim
 
 LABEL maintainer="samzong.lu@gmail.com"
 
