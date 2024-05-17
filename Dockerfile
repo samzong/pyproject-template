@@ -1,23 +1,31 @@
-FROM python:3.11-slim
+# Use a smaller base image
+FROM python:3.11-slim as builder
 
 LABEL maintainer="samzong.lu@gmail.com"
 
 WORKDIR /app
 
-# 安装 Poetry
+# Install Poetry
 RUN apt-get update && apt-get install -y curl && \
     curl -sSL https://install.python-poetry.org | python3 - && \
     apt-get remove -y curl && apt-get autoremove -y && \
     ln -s $HOME/.local/bin/poetry /usr/local/bin/poetry
 
-# 复制项目文件
+# Copy project files
 COPY . .
 
-# 安装项目依赖
-RUN poetry install --no-dev
+# Install project dependencies
+RUN poetry install --only main --no-cache --no-root
 
-# 暴露端口
+
+# Start a new stage
+FROM python:3.11-slim
+
+# Copy only the necessary files from the previous stage
+COPY --from=builder /app .
+
+# Expose port
 EXPOSE 5000
 
-# 启动项目
+# Start the project
 CMD ["poetry", "run", "uvicorn", "main:app" ,"--host", "0.0.0.0", "--port", "5000"]
