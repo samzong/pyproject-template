@@ -12,6 +12,7 @@ E-mail: samzong.lu@gmail.com
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from logger import logger
 
 from src.hello import hello
 
@@ -35,6 +36,7 @@ app = FastAPI(
 
 @app.get("/")
 async def root():
+    logger.info("Root endpoint was accessed")
     return RedirectResponse(url="/docs")
 
 
@@ -43,4 +45,5 @@ async def get_hello():
     return hello()
 
 if __name__ == '__main__':
+    logger.info("Starting the application")
     uvicorn.run(app, host="0.0.0.0", port=5000, log_level="info")
