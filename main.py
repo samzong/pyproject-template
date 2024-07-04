@@ -2,13 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 
-"""
-
-Author: samzong.lu
-E-mail: samzong.lu@gmail.com
-
-"""
-
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
