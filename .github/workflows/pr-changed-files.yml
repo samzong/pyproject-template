@@ -23,7 +23,32 @@ jobs:
 
           # 从环境变量读取更改的文件列表
           changed_files = os.environ['CHANGED_FILES']
-          print("Changed files:",changed_files)
+
+          # 特殊字符串列表
+          dce_model = [
+            'zh/amamba/',
+            'zh/skoala/',
+            'zh/middleware/',
+            'zh/kpanda/',
+            'zh/baize/',
+            'zh/insight/',
+            'zh/kant/',
+            'zh/dce/',
+            'zh/install/',
+            'zh/mspider/',
+            'zh/video/',
+            'zh/ghippo/',
+            'zh/download/',
+            'zh/blogs'/,
+            'zh/community/',
+            'zh/native/'
+            ]
+      
+          # 检查是否包含特殊字符串
+          for model in dce_model:
+              if any(model in file for file in changed_files):
+                  print(f"Matched special string: {special_string}")
+          EOF
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
 
