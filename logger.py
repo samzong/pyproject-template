@@ -1,14 +1,6 @@
 # /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-
-"""
-
-Author: samzong.lu
-E-mail: samzong.lu@gmail.com
-
-"""
-
 import logging
 import os
 from logging.handlers import RotatingFileHandler
