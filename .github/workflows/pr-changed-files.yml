@@ -20,23 +20,10 @@ jobs:
         run: |
           python << EOF
           import os
-          import json
 
           # 从环境变量读取更改的文件列表
           changed_files = os.environ['CHANGED_FILES']
-          # 将字符串转换为列表
-          changed_files_list = json.loads(changed_files)
-          print("Changed files:")
-          for file in changed_files_list:
-              print(f"- {file}")
-
-          # 计算更改的文件数量
-          file_count = len(changed_files_list)
-
-          # 将文件数量设置为输出变量
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-              print(f"file_count={file_count}", file=fh)
-          EOF
+          print("Changed files:",changed_files)
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
 
