@@ -1,0 +1,40 @@
+name: PR File Changes Comment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  comment-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+
+      - name: Create file list
+        id: file-list
+        run: |
+          FILE_LIST=""
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            FILE_LIST="${FILE_LIST}- ${file}\n"
+          done
+          echo "file_list<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$FILE_LIST" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `修改的文件列表：\n\n${{ steps.file-list.outputs.file_list }}`
+            })
